@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import axiosInstance from '../utils/axiosInstance'; // import the custom axios instance
 
 function Dashboard() {
   const [userData, setUserData] = useState(null);
@@ -10,10 +10,7 @@ function Dashboard() {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const token = localStorage.getItem('token');
-        const response = await axios.get('http://localhost:8000/api/user-info/', {
-          headers: { 'Authorization': `Token ${token}` }
-        });
+        const response = await axiosInstance.get('/api/user-info/');
         setUserData(response.data);
       } catch (error) {
         console.error('Error fetching user data:', error);
@@ -27,8 +24,11 @@ function Dashboard() {
   }, [navigate]);
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
+    localStorage.removeItem('access');
+    localStorage.removeItem('refresh');
     navigate('/login');
+    window.location.reload();  // Add this after navigation to reset everything
+
   };
 
   if (loading) return <div>Loading...</div>;

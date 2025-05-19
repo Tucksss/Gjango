@@ -11,18 +11,23 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:8000/api/login/', {
+      const response = await axios.post('http://localhost:8000/api/token/', {
         username: username,
         password: password
       });
 
-      localStorage.setItem('token', response.data.token);
+      localStorage.setItem('access', response.data.access);
+      localStorage.setItem('refresh', response.data.refresh);
       console.log('Login successful:', response.data);
       navigate('/dashboard');
     } catch (error) {
       console.error('Login error:', error);
       alert('Invalid username or password');
     }
+  };
+
+  const handleRegisterClick = () => {
+    navigate('/register');  // Adjust this path based on your routing setup
   };
 
   return (
@@ -45,6 +50,11 @@ function Login() {
         />
         <button type="submit">Login</button>
       </form>
+
+      {/* Register Button */}
+      <div style={{ marginTop: '10px' }}>
+        <button onClick={handleRegisterClick}>Register</button>
+      </div>
     </div>
   );
 }
